@@ -37,4 +37,8 @@ class MainView : View("office space desk placement optimizer") {
         }
         this.addChildIfPossible(canvas)
     }
+
+    init {
+        canvas.update(controller.room)
+    }
 }
