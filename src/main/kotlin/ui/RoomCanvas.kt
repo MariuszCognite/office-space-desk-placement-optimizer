@@ -1,3 +1,5 @@
+package ui
+
 import javafx.scene.canvas.Canvas
 
 class RoomCanvas(val canvas_width: Double, val canvas_height: Double) : Canvas(canvas_width, canvas_height) {

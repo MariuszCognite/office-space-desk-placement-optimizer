@@ -1,3 +1,5 @@
+package controller
+
 import javafx.beans.property.SimpleIntegerProperty
 import tornadofx.Controller
 
