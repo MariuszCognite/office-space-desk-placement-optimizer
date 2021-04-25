@@ -9,6 +9,10 @@ internal data class PopulationWithFitness(val all: List<SpecimenWithFitness>) {
         return PopulationWithFitness(all.sortedByDescending { it.fitness })
     }
 
+    fun toPopulation(): Population {
+        return Population(all.map { it.specimen })
+    }
+
     override fun toString(): String {
         var sb = StringBuilder()
         for (specimen in all) {
@@ -31,6 +35,7 @@ private fun calculateSpecimensFitness(specimen: Specimen): Double {
     return averageDistanceBetweenDesks(specimen)
 }
 
+// Warning: O(n^2)
 private fun averageDistanceBetweenDesks(specimen: Specimen): Double {
     var accumulator = 0.0
     var numConnections = 0

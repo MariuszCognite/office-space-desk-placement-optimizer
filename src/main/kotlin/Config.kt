@@ -4,6 +4,7 @@ import org.locationtech.jts.geom.GeometryFactory
 object Config {
     // ga parameters:
     val populationSize = 20
+    val elitism = 2
 
     // room parameters (all dimensions are in mm):
     val numberOfDesks = 10
