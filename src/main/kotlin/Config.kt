@@ -10,7 +10,7 @@ object Config {
     val maxRotationMutation = 90
 
     // room parameters (all dimensions are in mm):
-    val numberOfDesks = 10
+    val numberOfDesks = 14
     val deskWidth = 2000 // 2m
     val deskHeight = 800 // 0.8m
     val distanceBetweenDeskAndHead = 200

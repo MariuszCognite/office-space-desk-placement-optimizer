@@ -23,20 +23,7 @@ fun nextGeneration(currentPopulation: Population): Pair<Population, Specimen> {
         }
     }
 
-    // parents for new offspring are chosen according to ranked selection
-    /*val n = currentPopulationWithFitness.all.size
-    val numRanks = (n * (n + 1.0)) / 2.0 // gauss sum
-    val currentPopulationWithRankRanges =
-        currentPopulationWithFitness.all.scanIndexed(0.0..0.0 to currentPopulationWithFitness.all.last()) { index, acc, specimen ->
-
-            val range_start = acc.first.endInclusive
-            val range_end = range_start + ((index + 1).toDouble() / numRanks)
-
-            range_start..range_end to specimen
-        }*l
-        
-     */
-
+    // select parents via roulette wheel selection
     val totalFitness = currentPopulationWithFitness.all.fold(0.0) { acc, specimen ->
         acc + specimen.fitness
     }
@@ -56,6 +43,7 @@ fun nextGeneration(currentPopulation: Population): Pair<Population, Specimen> {
         newPopulation.add(mutate(crossover(firstParent, secondParent)))
     }
 
+    // debug: best specimen of the last generation
     println(currentPopulationWithFitness.all.last().fitness)
 
     return Population(newPopulation) to currentPopulationWithFitness.all.last().specimen

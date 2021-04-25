@@ -43,17 +43,7 @@ private suspend fun calculateSpecimensFitness(specimen: Specimen): Double {
     return averageDistanceBetweenDesks(specimen) * Math.pow(
         insideRoomAreaPercentage(specimen),
         4.0
-    ) * nonOverlappingAreaPercentage(specimen) - wygladFactor(
-        specimen
-    )
-}
-
-private suspend fun wygladFactor(specimen: Specimen): Double {
-    var accumulator = 0.0
-    specimen.desks.forEach {
-        accumulator += it.rotation % 30
-    }
-    return accumulator / 2
+    ) * nonOverlappingAreaPercentage(specimen)
 }
 
 // Warning: O(n^2)
