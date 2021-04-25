@@ -40,7 +40,18 @@ class MainView : View("office space desk placement optimizer") {
                         }
                     }
                 }
-                button("next 10 iterations")
+                button("next 10 iterations") {
+                    action {
+                        repeat(10) {
+                            runAsync {
+                                controller.nextIteration()
+                            }.ui {
+                                iterations.set(controller.iterations)
+                                canvas.update(controller.room, it)
+                            }
+                        }
+                    }
+                }
                 button("next 100 iterations")
                 button("RESET") {
                     addClass(MainStyle.resetbutton)

@@ -6,7 +6,7 @@ import model.Specimen
 internal data class SpecimenWithFitness(val specimen: Specimen, val fitness: Double)
 internal data class PopulationWithFitness(val all: List<SpecimenWithFitness>) {
     fun sorted(): PopulationWithFitness {
-        return PopulationWithFitness(all.sortedByDescending { it.fitness })
+        return PopulationWithFitness(all.sortedBy { it.fitness })
     }
 
     fun toPopulation(): Population {
@@ -48,4 +48,8 @@ private fun averageDistanceBetweenDesks(specimen: Specimen): Double {
         }
     }
     return accumulator / numConnections
+}
+
+private fun nonOverlappingAreaPercentage(specimen: Specimen): Double {
+    
 }

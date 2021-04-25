@@ -5,6 +5,9 @@ object Config {
     // ga parameters:
     val populationSize = 20
     val elitism = 2
+    val mutationRate = 0.05
+    val maxPositionMutation = 500
+    val maxRotationMutation = 90
 
     // room parameters (all dimensions are in mm):
     val numberOfDesks = 10
