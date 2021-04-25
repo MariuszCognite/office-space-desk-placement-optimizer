@@ -52,7 +52,19 @@ class MainView : View("office space desk placement optimizer") {
                         }
                     }
                 }
-                button("next 100 iterations")
+                button("next 1000 iterations") {
+                    action {
+                        repeat(1000) {
+                            runAsync {
+                                val it = controller.nextIteration()
+                                tornadofx.runLater {
+                                    iterations.set(controller.iterations)
+                                    canvas.update(controller.room, it)
+                                }
+                            }
+                        }
+                    }
+                }
                 button("RESET") {
                     addClass(MainStyle.resetbutton)
                 }

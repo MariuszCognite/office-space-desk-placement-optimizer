@@ -1,6 +1,10 @@
 package model
 
+import Config
 import org.locationtech.jts.geom.Coordinate
+import org.locationtech.jts.geom.Geometry
+import org.locationtech.jts.geom.GeometryFactory
+import org.locationtech.jts.geom.util.AffineTransformation
 import kotlin.random.Random
 
 /**
@@ -28,7 +32,46 @@ data class Desk(val x: Int, val y: Int, val rotation: Int) {
     }
 
     fun headPositionToCoordinate(): Coordinate {
-        val head = headCoordinate()
-        return Coordinate(head.first.toDouble(), head.second.toDouble())
+        val headX = 0
+        val headY = -Config.deskHeight / 2 - Config.distanceBetweenDeskAndHead - Config.headRadius
+        val geom = GeometryFactory().createPoint(Coordinate(headX.toDouble(), headY.toDouble()))
+        val at = AffineTransformation()
+        at.rotate(Math.toRadians(rotation.toDouble()))
+        at.translate(x.toDouble(), y.toDouble())
+        return at.transform(geom).coordinate
+    }
+
+    fun toGeometry(): Geometry {
+        val points = ArrayList<Coordinate>()
+        points.add(Coordinate(-Config.deskWidth / 2.0, -Config.deskHeight.toDouble() / 2))
+        points.add(Coordinate(-Config.headRadius.toDouble(), -Config.deskHeight / 2.0))
+        points.add(
+            Coordinate(
+                -Config.headRadius.toDouble(),
+                -Config.deskHeight / 2.0 - Config.distanceBetweenDeskAndHead - Config.headRadius * 2
+            )
+        )
+        points.add(
+            Coordinate(
+                Config.headRadius.toDouble(),
+                -Config.deskHeight / 2.0 - Config.distanceBetweenDeskAndHead - Config.headRadius * 2
+            )
+        )
+        points.add(
+            Coordinate(
+                Config.headRadius.toDouble(),
+                -Config.deskHeight / 2.0
+            )
+        )
+        points.add(Coordinate(Config.deskWidth / 2.0, -Config.deskHeight / 2.0))
+        points.add(Coordinate(Config.deskWidth / 2.0, Config.deskHeight / 2.0))
+        points.add(Coordinate(-Config.deskWidth / 2.0, Config.deskHeight / 2.0))
+        points.add(Coordinate(-Config.deskWidth / 2.0, -Config.deskHeight / 2.0))
+        val geom = GeometryFactory().createPolygon(points.toTypedArray())
+        val at = AffineTransformation()
+        at.rotate(Math.toRadians(rotation.toDouble()))
+        at.translate(x.toDouble(), y.toDouble())
+        return at.transform(geom)
+        // return geom
     }
 }

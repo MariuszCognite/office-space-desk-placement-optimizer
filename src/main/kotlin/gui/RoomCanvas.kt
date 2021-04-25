@@ -64,7 +64,12 @@ class RoomCanvas(val canvas_width: Double, val canvas_height: Double) : Canvas(c
         gc.lineTo(topLeft.first.toDouble(), topLeft.second.toDouble())
         gc.stroke()
 
-        val (headX, headY) = desk.headCoordinate()
+        gc.restore()
+
+        gc.save()
+        val headGeom = desk.headPositionToCoordinate()
+        val headX = headGeom.x
+        val headY = headGeom.y
 
         gc.strokeOval(
             (headX - Config.headRadius).toDouble(),
@@ -72,6 +77,16 @@ class RoomCanvas(val canvas_width: Double, val canvas_height: Double) : Canvas(c
             Config.headRadius.toDouble() * 2,
             Config.headRadius.toDouble() * 2
         )
+
+        val geom = desk.toGeometry()
+        val coordinates = geom.coordinates
+        val first = coordinates[0]
+        gc.moveTo(first.x, first.y)
+        for (i in 1..coordinates.lastIndex) {
+            gc.lineTo(coordinates[i].x, coordinates[i].y)
+        }
+        gc.lineTo(first.x, first.y)
+        gc.stroke()
         gc.restore()
     }
 

@@ -13,14 +13,13 @@ import kotlin.random.Random
 fun nextGeneration(currentPopulation: Population): Pair<Population, Specimen> {
     // first, calculate fitness of existing population
     val currentPopulationWithFitness = calculatePopulationFitness(currentPopulation).sorted()
-    println(currentPopulationWithFitness)
 
     val newPopulation = ArrayList<Specimen>()
 
     // elitism: N best fit individuals will move to new population without changes
     if (Config.elitism > 0) {
         repeat(Config.elitism) {
-            newPopulation.add(currentPopulationWithFitness.all[it].specimen)
+            newPopulation.add(currentPopulationWithFitness.all[currentPopulationWithFitness.all.lastIndex - it].specimen)
         }
     }
 
@@ -42,6 +41,8 @@ fun nextGeneration(currentPopulation: Population): Pair<Population, Specimen> {
         val secondParent = pickNextParent(currentPopulationWithRankRanges, firstParent)
         newPopulation.add(mutate(crossover(firstParent, secondParent)))
     }
+
+    println(currentPopulationWithFitness.all.last().fitness)
 
     return Population(newPopulation) to currentPopulationWithFitness.all.last().specimen
 }

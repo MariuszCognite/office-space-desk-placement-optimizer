@@ -3,14 +3,14 @@ import org.locationtech.jts.geom.GeometryFactory
 
 object Config {
     // ga parameters:
-    val populationSize = 20
+    val populationSize = 40
     val elitism = 2
     val mutationRate = 0.05
-    val maxPositionMutation = 500
-    val maxRotationMutation = 90
+    val maxPositionMutation = 5000
+    val maxRotationMutation = 180
 
     // room parameters (all dimensions are in mm):
-    val numberOfDesks = 10
+    val numberOfDesks = 14
     val deskWidth = 2000 // 2m
     val deskHeight = 800 // 0.8m
     val distanceBetweenDeskAndHead = 200
