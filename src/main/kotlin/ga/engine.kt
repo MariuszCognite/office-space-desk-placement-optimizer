@@ -24,13 +24,27 @@ fun nextGeneration(currentPopulation: Population): Pair<Population, Specimen> {
     }
 
     // parents for new offspring are chosen according to ranked selection
-    val n = currentPopulationWithFitness.all.size
+    /*val n = currentPopulationWithFitness.all.size
     val numRanks = (n * (n + 1.0)) / 2.0 // gauss sum
     val currentPopulationWithRankRanges =
         currentPopulationWithFitness.all.scanIndexed(0.0..0.0 to currentPopulationWithFitness.all.last()) { index, acc, specimen ->
 
             val range_start = acc.first.endInclusive
             val range_end = range_start + ((index + 1).toDouble() / numRanks)
+
+            range_start..range_end to specimen
+        }*l
+        
+     */
+
+    val totalFitness = currentPopulationWithFitness.all.fold(0.0) { acc, specimen ->
+        acc + specimen.fitness
+    }
+    val currentPopulationWithRankRanges =
+        currentPopulationWithFitness.all.scanIndexed(0.0..0.0 to currentPopulationWithFitness.all.last()) { index, acc, specimen ->
+
+            val range_start = acc.first.endInclusive
+            val range_end = range_start + (specimen.fitness / totalFitness)
 
             range_start..range_end to specimen
         }
@@ -78,7 +92,7 @@ private fun mutate(specimen: Specimen): Specimen {
                 }
             )
         )
-        Desk(newX, newY, newRotation)
+        Desk(newX, newY, newRotation / 30 * 30)
     }
     return Specimen(desksMutated)
 }

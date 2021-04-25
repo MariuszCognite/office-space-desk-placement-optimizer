@@ -15,6 +15,7 @@ tasks.withType<KotlinCompile>() {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
     implementation("no.tornado:tornadofx:1.7.20")
     implementation("org.locationtech.jts:jts-core:1.16.1")
 }

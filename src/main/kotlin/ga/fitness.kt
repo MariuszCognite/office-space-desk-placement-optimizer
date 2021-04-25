@@ -1,5 +1,9 @@
 package ga
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.runBlocking
 import model.Population
 import model.Specimen
 
@@ -25,22 +29,26 @@ internal data class PopulationWithFitness(val all: List<SpecimenWithFitness>) {
 
 internal fun calculatePopulationFitness(population: Population): PopulationWithFitness {
     return PopulationWithFitness(
-        population.all.map {
-            SpecimenWithFitness(it, calculateSpecimensFitness(it))
+        runBlocking(Dispatchers.Default) {
+            population.all.map {
+                async {
+                    SpecimenWithFitness(it, calculateSpecimensFitness(it))
+                }
+            }.awaitAll()
         }
     )
 }
 
-private fun calculateSpecimensFitness(specimen: Specimen): Double {
+private suspend fun calculateSpecimensFitness(specimen: Specimen): Double {
     return averageDistanceBetweenDesks(specimen) * Math.pow(
         insideRoomAreaPercentage(specimen),
-        3.0
+        4.0
     ) * nonOverlappingAreaPercentage(specimen) - wygladFactor(
         specimen
     )
 }
 
-private fun wygladFactor(specimen: Specimen): Double {
+private suspend fun wygladFactor(specimen: Specimen): Double {
     var accumulator = 0.0
     specimen.desks.forEach {
         accumulator += it.rotation % 30
@@ -49,27 +57,7 @@ private fun wygladFactor(specimen: Specimen): Double {
 }
 
 // Warning: O(n^2)
-private fun averageDistanceBetweenDesks(specimen: Specimen): Double {
-    /*var accumulator = 0.0
-    var numConnections = 0
-    var minDistance = Double.MAX_VALUE
-    var maxDistance = Double.MIN_VALUE
-    for (i in 0..(specimen.desks.size - 2)) {
-        val p1 = specimen.desks[i].headPositionToCoordinate()
-        for (j in ((i + 1)..specimen.desks.size - 1)) {
-            val p2 = specimen.desks[j].headPositionToCoordinate()
-            val dist = p1.distance(p2)
-            if (dist < minDistance) {
-                minDistance = dist
-            }
-            if (dist > maxDistance) {
-                maxDistance = dist
-            }
-            accumulator += dist
-            numConnections += 1
-        }
-    }
-    return (accumulator / numConnections) * (minDistance / maxDistance)*/
+private suspend fun averageDistanceBetweenDesks(specimen: Specimen): Double {
     var accumulator = 0.0
     var numConnections = 0
 
@@ -91,23 +79,7 @@ private fun averageDistanceBetweenDesks(specimen: Specimen): Double {
     return (accumulator / numConnections)
 }
 
-// Warning: O(n^2)
-private fun shortestDistanceBetweenDesks(specimen: Specimen): Double {
-    var minDistance = Double.MAX_VALUE
-    for (i in 0..(specimen.desks.size - 2)) {
-        val p1 = specimen.desks[i].headPositionToCoordinate()
-        for (j in ((i + 1)..specimen.desks.size - 1)) {
-            val p2 = specimen.desks[j].headPositionToCoordinate()
-            val dist = p1.distance(p2)
-            if (dist < minDistance) {
-                minDistance = dist
-            }
-        }
-    }
-    return minDistance
-}
-
-private fun insideRoomAreaPercentage(specimen: Specimen): Double {
+private suspend fun insideRoomAreaPercentage(specimen: Specimen): Double {
     var totalDeskArea = 0.0
     var areaOutsideOfRoom = 0.0
     val room = Config.room
@@ -121,7 +93,7 @@ private fun insideRoomAreaPercentage(specimen: Specimen): Double {
     return (totalDeskArea - areaOutsideOfRoom) / totalDeskArea
 }
 
-private fun nonOverlappingAreaPercentage(specimen: Specimen): Double {
+private suspend fun nonOverlappingAreaPercentage(specimen: Specimen): Double {
     var totalDeskArea = specimen.desks[0].toGeometry().area * specimen.desks.size
     val room = Config.room
 
