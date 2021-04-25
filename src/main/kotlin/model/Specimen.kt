@@ -1,8 +1,13 @@
 package model
 
-/**
- * @param x x position expressed as offset from origin, in mm
- * @param y y position expressed as offset from origin, in mm
- * @param rotation rotation around desks center, in degrees
- */
-data class Specimen(val x: Int, val y: Int, val rotation: Int)
+data class Specimen(val desks: List<Desk>) {
+    companion object {
+        fun generateRandom(room: Room): Specimen {
+            val desks = ArrayList<Desk>()
+            repeat(Config.numberOfDesks) {
+                desks.add(Desk.generateRandom(room))
+            }
+            return Specimen(desks)
+        }
+    }
+}

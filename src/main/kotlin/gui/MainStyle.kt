@@ -1,4 +1,4 @@
-package ui
+package gui
 
 import javafx.scene.paint.Color
 import tornadofx.CssBox

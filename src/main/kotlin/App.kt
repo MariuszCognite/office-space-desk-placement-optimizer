@@ -1,6 +1,6 @@
 import tornadofx.reloadStylesheetsOnFocus
-import ui.MainStyle
-import ui.MainView
+import gui.MainStyle
+import gui.MainView
 
 class App : tornadofx.App(MainView::class, MainStyle::class) {
     init {

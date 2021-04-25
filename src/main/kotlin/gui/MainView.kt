@@ -1,8 +1,10 @@
-package ui
+package gui
 
 import controller.AppController
+import javafx.beans.property.SimpleIntegerProperty
 import javafx.geometry.Insets
 import tornadofx.View
+import tornadofx.action
 import tornadofx.addChildIfPossible
 import tornadofx.addClass
 import tornadofx.button
@@ -13,6 +15,7 @@ import tornadofx.vbox
 class MainView : View("office space desk placement optimizer") {
     private val canvas = RoomCanvas(1300.0, 800.0)
     val controller: AppController by inject()
+    val iterations = SimpleIntegerProperty(0)
 
     override val root = vbox {
         padding = Insets(10.0, 10.0, 10.0, 10.0)
@@ -21,13 +24,22 @@ class MainView : View("office space desk placement optimizer") {
             label("Iteration: ") {
                 addClass(MainStyle.iterationslabel)
             }
-            label(controller.iterations) {
+            label(iterations) {
                 addClass(MainStyle.iterationslabel)
             }
             hbox {
                 padding = Insets(0.0, 0.0, 0.0, 20.0)
                 spacing = 10.0
-                button("next iteration")
+                button("next iteration") {
+                    action {
+                        runAsync {
+                            controller.nextIteration()
+                        }.ui {
+                            iterations.set(controller.iterations)
+                            canvas.update(controller.room, it)
+                        }
+                    }
+                }
                 button("next 10 iterations")
                 button("next 100 iterations")
                 button("RESET") {
@@ -39,6 +51,6 @@ class MainView : View("office space desk placement optimizer") {
     }
 
     init {
-        canvas.update(controller.room)
+        canvas.update(controller.room, controller.population.all.get(0))
     }
 }
